@@ -13,6 +13,11 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+// Products
+$router->group(['prefix' => 'products'], function () use ($router) {
+    $router->get('/', 'ProductController@index');
+    $router->get('/{id}', 'ProductController@show');
+    $router->post('/', 'ProductController@store');
+    $router->patch('/{id}', 'ProductController@update');
+    $router->delete('/{id}', 'ProductController@destroy');
 });

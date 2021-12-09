@@ -73,3 +73,30 @@ Base de Dados:
 ```
 mysql -h localhost -P 4001 -u products -p12344 products
 ```
+
+Api Products:
+
+- Fetch all:
+  ```
+  GET /products
+  ```
+
+- Find By Id:
+  ```
+  GET /products/:id
+  ```
+
+- Create:
+  ```
+  POST /products
+  ```
+
+- Update:
+  ```
+  PATCH /products/:id
+  ```
+
+- Remove
+  ```
+  DELETE /products/:id
+  ```

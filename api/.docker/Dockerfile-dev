@@ -1,0 +1,56 @@
+FROM php:8.0.12-fpm-alpine3.14
+
+LABEL Maintainer="Johnny Joe <github.com/johnny00joe>" \
+    Description="PHP-FPM v8.0 on top of Alpine Linux for development environment."
+
+ARG COMPOSER_VERSION
+ARG COMPOSER_SUM
+
+RUN set -eux \
+    && apk add --no-cache \
+    freetype \
+    libjpeg-turbo \
+    libpng \
+    libxpm \
+    libzip \
+    make
+
+RUN set -eux \
+    && apk add --no-cache --virtual .build-deps \
+    autoconf \
+    curl-dev \
+    freetype-dev \
+    gcc \
+    libc-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libxml2-dev \
+    libxpm-dev \
+    libzip-dev \
+    zlib-dev \
+    && ln -s /usr/lib/x86_64-linux-gnu/libXpm.* /usr/lib/ \
+    && docker-php-ext-configure gd \
+        --enable-gd \
+        --with-webp \
+        --with-jpeg \
+        --with-xpm \
+        --with-freetype \
+        --enable-gd-jis-conv \
+    && docker-php-ext-install -j$(nproc) gd && true \
+    && docker-php-ext-install -j$(nproc) mysqli && true \
+    && docker-php-ext-configure pdo_mysql --with-zlib-dir=/usr \
+    && docker-php-ext-install -j$(nproc) pdo_mysql && true \
+    && docker-php-ext-install -j$(nproc) pcntl && true \
+    && docker-php-ext-install -j$(nproc) soap && true \
+    && docker-php-ext-configure zip --with-zip \
+    && docker-php-ext-install -j$(nproc) zip && true
+
+RUN set -eux \
+    && curl -LO "https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar" \
+    && echo "${COMPOSER_SUM}  composer.phar" | sha256sum -c - \
+    && chmod +x composer.phar \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer --version && true
+
+CMD ["php-fpm"]

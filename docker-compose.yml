@@ -1,0 +1,59 @@
+version: '3.9'
+
+networks:
+  products:
+
+services:
+
+  webserver:
+    image: nginx:1.21.3-alpine
+    container_name: products-webserver
+    networks:
+      - products
+    ports:
+      - ${WEBSERVER_HOST_PORT}:${WEBSERVER_DOCKER_PORT}
+    volumes:
+      - ./api/src:/var/www/html
+      - ./webserver/.docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+    environment:
+      - WEBSERVER_DOCKER_PORT=${WEBSERVER_DOCKER_PORT}
+
+  api:
+    build:
+      context: './api'
+      dockerfile: ./.docker/Dockerfile-dev
+      args:
+        - COMPOSER_VERSION=${COMPOSER_VERSION}
+        - COMPOSER_SUM=${COMPOSER_SUM}
+    image: "products-api:dev"
+    container_name: products-api
+    networks:
+      - products
+    expose:
+      - "${API_DOCKER_PORT}"
+    volumes:
+      - ./api/src:/var/www/html
+      - ./api/.docker/php.ini:/usr/local/etc/php/php.ini
+      - ./api/.docker/www.conf:/usr/local/etc/php-fpm.d/www.conf
+    depends_on:
+      - db
+    environment:
+      - API_DOCKER_PORT=${API_DOCKER_PORT}
+
+  db:
+    image: mysql:8.0.27
+    container_name: products-db
+    networks:
+      - products
+    ports:
+      - '${DB_HOST_PORT}:${DB_DOCKER_PORT}'
+    volumes:
+      - './db/data:/var/lib/mysql'
+      - './db/my.cnf:/etc/mysql/conf.d/my.cnf'
+    environment:
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}

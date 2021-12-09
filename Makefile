@@ -3,6 +3,7 @@ build:
 	docker-compose build --no-cache --force-rm
 	cp .env.example api/src/.env
 	@make up
+	docker-compose exec api php artisan migrate
 
 up:
 	docker-compose up -d

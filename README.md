@@ -1,4 +1,4 @@
-# Tecnologies
+# Technologies
 
 - Nginx 1.21.3
 - PHP 8.0.12
@@ -7,8 +7,11 @@
 - Alpine 3.1.14
 - Docker Engine
 - Docker Compose
+- Swagger
+- OpenAPI
+- Redoc
 
-# Install
+# Installation
 
 Clone from repo:
 
@@ -99,4 +102,10 @@ Api Products:
 - Remove
   ```
   DELETE /products/:id
+  ```
+
+API Documentation:
+
+  ```
+  http://localhost:4000/idoc
   ```

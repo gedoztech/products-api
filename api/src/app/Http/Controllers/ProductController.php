@@ -7,10 +7,15 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 
+/**
+ * @group Products
+ */
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * [Insert optional longer description of the API endpoint here.]
      *
      * @return \Illuminate\Http\Response
      *
@@ -37,9 +42,27 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @bodyParam sku string required
+     * The sku of the product. Example: 123-ABC-45678
+     * @bodyParam name string required
+     * The name of the product. Example: Smartphone XYZ
+     *
+     * @response 200 {
+     *      "data": {
+     *        "id": 1,
+     *        "sku": "123-ABC-45678",
+     *        "name": "Smartphone XYZ",
+     *        "data_criacao": "2021-01-01T19:38:14.000000Z"
+     *      },
+     *      "message": "Created successfully"
+     * }
+     *
+     * @response 404 {
+     *  "message": "No query results for model"
+     * }
+     *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
-     *
      */
     public function store(Request $request)
     {
@@ -76,7 +99,7 @@ class ProductController extends Controller
      *
      * @param integer $id
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function destroy($id)
     {

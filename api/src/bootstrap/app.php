@@ -60,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('idoc');
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +95,8 @@ $app->configure('app');
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->bind('path.public', function ($app) { return $app->basePath('/public'); });
+$app->register(\OVAC\IDoc\IDocLumenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

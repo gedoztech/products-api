@@ -17,7 +17,7 @@
 $router->group(['prefix' => 'products'], function () use ($router) {
     $router->get('/', 'ProductController@index');
     $router->get('/{id}', 'ProductController@show');
-    $router->post('/', 'ProductController@store');
+    $router->post('/', ['as' => 'products.create', 'uses' => 'ProductController@store']);
     $router->patch('/{id}', 'ProductController@update');
     $router->delete('/{id}', 'ProductController@destroy');
 });
